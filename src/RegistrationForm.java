@@ -93,10 +93,10 @@ public class RegistrationForm extends JDialog{
         try {
 
             Connection conn = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
-            String inputname = tfName.getText();
-            String inputpassword = String.valueOf(pfPassword.getPassword());
+            String name = tfName.getText();
+            String password = String.valueOf(pfPassword.getPassword());
             Statement stmt = conn.createStatement();
-            String sql = "SELECT %s FROM %s WHERE users name='"+inputname+"' and password='"+inputpassword+"'";
+            String sql = "SELECT `name`,`password` FROM `users` WHERE 1 ";
 
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
 
@@ -104,13 +104,13 @@ public class RegistrationForm extends JDialog{
             if (result.next()){
                 dispose();
             }
-            else {
+            else
+            {
                 JOptionPane.showMessageDialog(this,
                         "User not Registered in, Please Register",
                         "Try Again",
                         JOptionPane.ERROR_MESSAGE);
-                tfName.setText(" ");
-                pfPassword.setText(" ");
+
 
             }
             stmt.close();
