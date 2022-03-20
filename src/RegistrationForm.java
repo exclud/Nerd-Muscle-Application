@@ -13,6 +13,7 @@ public class RegistrationForm extends JDialog{
     private JButton btnRegister;
     private JButton btnCancel;
     private JPanel registerPanel;
+    private JButton btnLogin;
 
     /*Create Constructor*/
     public RegistrationForm (JFrame parent){
@@ -41,11 +42,20 @@ public class RegistrationForm extends JDialog{
 
             }
         });
+//        Action Listener for the Login Button
+        btnLogin.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (e.getSource() == btnLogin){
+                    dispose();
+                    WelcomePage welcomePage = new WelcomePage();
+                }
 
+            }
+        });
         setVisible(true);
-
     }
-
+//Create the Register User Function
     private void registerUser() {
         String name = tfName.getText();
         String email = tfEmail.getText();
@@ -122,6 +132,8 @@ public class RegistrationForm extends JDialog{
 
     public static void main(String[] args) {
         RegistrationForm myForm = new RegistrationForm(null);
+        WelcomePage welcomePage = new WelcomePage();
+
         User user = myForm.user;
         if(user != null) {
             System.out.println("Successful registration of:" + user.name);
@@ -129,6 +141,7 @@ public class RegistrationForm extends JDialog{
         else {
             System.out.println("Registration Canceled");
         }
+
 
     }
 }
