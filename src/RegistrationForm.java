@@ -11,7 +11,6 @@ public class RegistrationForm extends JDialog{
     private JPasswordField pfPassword;
     private JPasswordField pfConfirmPassword;
     private JButton btnRegister;
-    private JButton btnCancel;
     private JPanel registerPanel;
     private JButton btnLogin;
 
@@ -31,22 +30,16 @@ public class RegistrationForm extends JDialog{
             @Override
             public void actionPerformed(ActionEvent e) {
                 registerUser();
-
             }
         });
-//        Action Listener for the Cancel Button
-        btnCancel.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dispose();/*Closes the Application*/
 
-            }
-        });
 //        Action Listener for the Login Button
         btnLogin.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                dispose();
+
+                LoginUser();
+
             }
         });
         setVisible(true);
@@ -76,8 +69,8 @@ public class RegistrationForm extends JDialog{
             return;
         }
         user = addUserToDatabase(name , email, phone, password);
-        if (user!= null){
-            dispose();
+        if (user != null){
+          dispose();
         }
         else{
             JOptionPane.showMessageDialog(this,
@@ -88,6 +81,48 @@ public class RegistrationForm extends JDialog{
         }
 
     }
+
+    private void LoginUser(){
+        user = readFromDataBase();
+
+    }
+    private User readFromDataBase() {
+        final String DB_URL = "jdbc:mysql://localhost/JavaDashboard";
+        final String USERNAME = "root";
+        final String PASSWORD = "";
+        try {
+
+            Connection conn = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
+            String inputname = tfName.getText();
+            String inputpassword = String.valueOf(pfPassword.getPassword());
+            Statement stmt = conn.createStatement();
+            String sql = "SELECT %s FROM %s WHERE users name='"+inputname+"' and password='"+inputpassword+"'";
+
+            PreparedStatement preparedStatement = conn.prepareStatement(sql);
+
+            ResultSet result=stmt.executeQuery(sql);
+            if (result.next()){
+                dispose();
+            }
+            else {
+                JOptionPane.showMessageDialog(this,
+                        "User not Registered in, Please Register",
+                        "Try Again",
+                        JOptionPane.ERROR_MESSAGE);
+                tfName.setText(" ");
+                pfPassword.setText(" ");
+
+            }
+            stmt.close();
+            conn.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+        return user;
+    }
+
+
     public User user;
     private User addUserToDatabase ( String name, String email, String phone, String password){
         User user = null;
@@ -121,15 +156,12 @@ public class RegistrationForm extends JDialog{
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
         return user;
     }
 
+
     public static void main(String[] args) {
         RegistrationForm myForm = new RegistrationForm(null);
-        WelcomePage welcomePage = new WelcomePage();
-
         User user = myForm.user;
         if(user != null) {
             System.out.println("Successful registration of:" + user.name);
@@ -137,6 +169,7 @@ public class RegistrationForm extends JDialog{
         else {
             System.out.println("Registration Canceled");
         }
+        WelcomePage welcomePage = new WelcomePage();
 
 
     }
