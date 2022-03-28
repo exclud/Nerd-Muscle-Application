@@ -101,7 +101,8 @@ public class RegistrationForm extends JDialog{
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
 
             ResultSet result=stmt.executeQuery(sql);
-            if (result.next()){
+            if (result.next())
+            {
                 dispose();
             }
             else
@@ -170,6 +171,9 @@ public class RegistrationForm extends JDialog{
             System.out.println("Registration Canceled");
         }
         WelcomePage welcomePage = new WelcomePage();
+        ContactPage contactPage = new ContactPage();
+        AboutPage aboutPage = new AboutPage();
+
 
 
     }
